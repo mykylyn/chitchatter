@@ -17,10 +17,13 @@ export const useHome = () => {
   const [roomNameType, setRoomNameType] = useState<RoomNameType>(
     RoomNameType.UUID
   )
-  const [roomName, setRoomName] = useState(() =>
-    RoomNameGenerator.generate(roomNameType)
-  )
-  const [showEmbedCode, setShowEmbedCode] = useState(false)
+  const [roomName, setRoomName] = useState(() => {
+    const savedRoomName = localStorage.getItem('roomName')
+    return savedRoomName || RoomNameGenerator.generate(RoomNameType.UUID)
+  })
+  useEffect(() => {
+    localStorage.setItem('roomName', roomName)
+  }, [roomName])
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -61,13 +64,13 @@ export const useHome = () => {
     })
   }
 
-  const handleGetEmbedCodeClick = () => {
-    setShowEmbedCode(true)
-  }
+  // const handleGetEmbedCodeClick = () => {
+  //   setShowEmbedCode(true)
+  // }
 
-  const handleEmbedCodeWindowClose = () => {
-    setShowEmbedCode(false)
-  }
+  // const handleEmbedCodeWindowClose = () => {
+  //   setShowEmbedCode(false)
+  // }
 
   const isRoomNameValid = roomName.length > 0
 
@@ -75,15 +78,15 @@ export const useHome = () => {
     roomName,
     roomNameType,
     setRoomName,
-    showEmbedCode,
+    //showEmbedCode,
     handleRoomNameChange,
     handleRoomNameTypeChange,
     regenerateRoomName,
     handleFormSubmit,
     handleJoinPublicRoomClick,
     handleJoinPrivateRoomClick,
-    handleGetEmbedCodeClick,
-    handleEmbedCodeWindowClose,
+    // handleGetEmbedCodeClick,
+    // handleEmbedCodeWindowClose,
     isRoomNameValid,
   }
 }
