@@ -55,8 +55,10 @@ export const useHome = () => {
     navigate(`/public/${roomName}`)
   }
 
-  const handleJoinPrivateRoomClick = () => {
-    navigate(`/private/${roomName}`)
+  const handleJoinPrivateRoomClick = (meetingCode: string) => {
+    navigate(`/private/${roomName}`, {
+      state: { meetingCode: meetingCode },
+    })
   }
 
   const handleGetEmbedCodeClick = () => {

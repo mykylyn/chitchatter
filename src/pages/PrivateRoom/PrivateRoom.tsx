@@ -1,10 +1,12 @@
-import { Room } from 'components/Room'
 import { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation, useNavigate } from 'react-router-dom'
 
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+
+import { Room } from 'components/Room'
 import { WholePageLoading } from 'components/Loading'
-import { PasswordPrompt } from 'components/PasswordPrompt'
-import { allowAdvancedRoomLinkSharing } from 'components/Shell/constants'
 import { ShellContext } from 'contexts/ShellContext'
 import { useThrottledRoomMount } from 'hooks/useThrottledRoomMount'
 import { encryption } from 'services/Encryption'
@@ -16,17 +18,12 @@ interface PublicRoomProps {
 
 export function PrivateRoom({ userId }: PublicRoomProps) {
   const { roomId = '' } = useParams()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { meetingCode } = location.state || {}
   const { setTitle } = useContext(ShellContext)
   const canMount = useThrottledRoomMount(roomId)
-
-  const urlParams = new URLSearchParams(window.location.hash.substring(1))
-
-  if (allowAdvancedRoomLinkSharing && window.location.hash.length > 0) {
-    // Clear secret from address bar
-    window.history.replaceState(window.history.state, '', '#')
-  }
-
-  const [secret, setSecret] = useState(urlParams.get('secret') ?? '')
+  const [encodedPassword, setEncodedPassword] = useState<string | null>(null)
 
   useEffect(() => {
     notification.requestPermission()
@@ -36,26 +33,38 @@ export function PrivateRoom({ userId }: PublicRoomProps) {
     setTitle(`Room: ${roomId}`)
   }, [roomId, setTitle])
 
-  const handlePasswordEntered = async (password: string) => {
-    if (password.length !== 0)
-      setSecret(await encryption.encodePassword(roomId, password))
-  }
-
-  if (urlParams.has('pwd') && !urlParams.has('secret'))
-    handlePasswordEntered(urlParams.get('pwd') ?? '')
-
-  const awaitingSecret = secret.length === 0
+  useEffect(() => {
+    if (meetingCode) {
+      encryption.encodePassword(roomId, meetingCode).then(password => {
+        setEncodedPassword(password)
+      })
+    }
+  }, [roomId, meetingCode])
 
   if (!canMount) {
     return <WholePageLoading />
   }
 
-  return awaitingSecret ? (
-    <PasswordPrompt
-      isOpen={awaitingSecret}
-      onPasswordEntered={handlePasswordEntered}
-    />
-  ) : (
-    <Room userId={userId} roomId={roomId} password={secret} />
-  )
+  if (!meetingCode) {
+    return (
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6" color="error">
+          Error: No meeting code provided for private room
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => navigate('/')}
+          sx={{ mt: 2 }}
+        >
+          Go Back to Home
+        </Button>
+      </Box>
+    )
+  }
+
+  if (!encodedPassword) {
+    return <WholePageLoading />
+  }
+
+  return <Room userId={userId} roomId={roomId} password={encodedPassword} />
 }

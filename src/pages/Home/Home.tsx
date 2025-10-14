@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -10,8 +10,6 @@ import useTheme from '@mui/material/styles/useTheme'
 import { Cached } from '@mui/icons-material'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-import GitHubIcon from '@mui/icons-material/GitHub'
-import MuiLink from '@mui/material/Link'
 import Divider from '@mui/material/Divider'
 
 import { Form, Main } from 'components/Elements'
@@ -24,7 +22,6 @@ import { isEnhancedConnectivityAvailable } from '../../config/enhancedConnectivi
 
 import { useHome } from './useHome'
 import { EmbedCodeDialog } from './EmbedCodeDialog'
-import { CommunityRoomSelector } from './CommunityRoomSelector'
 
 export interface HomeProps {
   userId: string
@@ -34,6 +31,11 @@ export function Home({ userId }: HomeProps) {
   const theme = useTheme()
   const { updateUserSettings, getUserSettings } = useContext(SettingsContext)
   const { isEnhancedConnectivityEnabled } = getUserSettings()
+
+  // State for meeting code and room type
+  const [meetingCode, setMeetingCode] = useState('')
+  const [isPrivateRoom, setIsPrivateRoom] = useState(false)
+
   const {
     roomName,
     roomNameType,
@@ -44,7 +46,6 @@ export function Home({ userId }: HomeProps) {
     handleFormSubmit,
     handleJoinPublicRoomClick,
     handleJoinPrivateRoomClick,
-    handleGetEmbedCodeClick,
     handleEmbedCodeWindowClose,
     isRoomNameValid,
   } = useHome()
@@ -84,6 +85,31 @@ export function Home({ userId }: HomeProps) {
               {userId}
             </PeerNameDisplay>
           </Typography>
+
+          {/* Room Type Toggle */}
+          <Box
+            sx={{
+              mb: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Typography sx={{ mb: 1 }}>Room Type:</Typography>
+            <ToggleButtonGroup
+              value={isPrivateRoom ? 'private' : 'public'}
+              exclusive
+              onChange={(_, value) => {
+                setIsPrivateRoom(value === 'private')
+              }}
+              aria-label="room type"
+              size="small"
+            >
+              <ToggleButton value="public">Public</ToggleButton>
+              <ToggleButton value="private">Private</ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+
           <FormControl fullWidth>
             <TextField
               label="Room name (generated on your device)"
@@ -105,6 +131,20 @@ export function Home({ userId }: HomeProps) {
               size="medium"
             />
           </FormControl>
+          {/* Meeting Code Field (only visible for private rooms) */}
+          {isPrivateRoom && (
+            <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
+              <TextField
+                label="Meeting Code"
+                variant="outlined"
+                type="text"
+                value={meetingCode}
+                onChange={e => setMeetingCode(e.target.value)}
+                placeholder="Enter a code for your meeting"
+                size="medium"
+              />
+            </FormControl>
+          )}
           <Box sx={{ mt: 2, mb: 2 }}>
             <ToggleButtonGroup
               value={roomNameType}
@@ -124,55 +164,32 @@ export function Home({ userId }: HomeProps) {
               </ToggleButton>
             </ToggleButtonGroup>
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              gap: 1,
-              mt: 2,
-            }}
-          >
+          {/* Join Button */}
+          <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center', mt: 2 }}>
             <Button
               variant="contained"
-              onClick={handleJoinPublicRoomClick}
-              sx={{
-                marginTop: 2,
+              color="primary"
+              onClick={() => {
+                if (isPrivateRoom) {
+                  if (meetingCode) {
+                    handleJoinPrivateRoomClick(meetingCode)
+                  } else {
+                    alert('Please enter a meeting code for private rooms')
+                    return
+                  }
+                } else {
+                  handleJoinPublicRoomClick()
+                }
               }}
               disabled={!isRoomNameValid}
+              sx={{ width: '100%', maxWidth: '300px' }}
             >
-              Join public room
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleJoinPrivateRoomClick}
-              sx={{
-                marginTop: 2,
-                marginLeft: 2,
-              }}
-              disabled={!isRoomNameValid}
-            >
-              Join private room
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleGetEmbedCodeClick}
-              sx={{
-                marginTop: 2,
-                marginLeft: 2,
-              }}
-              disabled={!isRoomNameValid}
-            >
-              Get embed code
+              Join Room
             </Button>
           </Box>
         </Form>
       </Main>
       <Box component="section" aria-label="Additional options and information">
-        <Divider sx={{ my: 2 }} />
-        <Box maxWidth={theme.breakpoints.values.sm} mx="auto" px={2}>
-          <CommunityRoomSelector />
-        </Box>
         {isEnhancedConnectivityAvailable && (
           <>
             <Divider sx={{ my: 2 }} />
@@ -186,64 +203,6 @@ export function Home({ userId }: HomeProps) {
           </>
         )}
         <Divider sx={{ my: 2 }} />
-        <Box
-          sx={{
-            maxWidth: theme.breakpoints.values.sm,
-            mx: 'auto',
-            textAlign: 'center',
-            px: 2,
-          }}
-        >
-          <Typography variant="body1">
-            This is a free communication tool that is designed for simplicity,
-            privacy, and security. All interaction between you and your online
-            peers is encrypted. There is no record of your conversation once you
-            all leave.
-          </Typography>
-        </Box>
-        <Box
-          component="footer"
-          sx={{
-            mx: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <MuiLink
-            href="https://github.com/jeremyckahn/chitchatter"
-            target="_blank"
-            sx={() => ({
-              color: theme.palette.text.primary,
-            })}
-          >
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="View source code on GitHub"
-            >
-              <GitHubIcon sx={{ fontSize: '2em' }} />
-            </IconButton>
-          </MuiLink>
-          <Typography variant="body1" sx={{ textAlign: 'center', mb: 1 }}>
-            Licensed under{' '}
-            <MuiLink
-              href="https://github.com/jeremyckahn/chitchatter/blob/develop/LICENSE"
-              target="_blank"
-            >
-              GPL v2
-            </MuiLink>
-            . Please{' '}
-            <MuiLink
-              href="https://github.com/jeremyckahn/chitchatter/blob/develop/README.md"
-              target="_blank"
-            >
-              read the docs
-            </MuiLink>
-            .
-          </Typography>
-        </Box>
       </Box>
     </Box>
   )
