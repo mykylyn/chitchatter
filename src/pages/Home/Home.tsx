@@ -32,9 +32,10 @@ export function Home({ userId }: HomeProps) {
   const { updateUserSettings, getUserSettings } = useContext(SettingsContext)
   const { isEnhancedConnectivityEnabled } = getUserSettings()
 
-  // State for meeting code and room type
+  // State for meeting code, room type, and error state
   const [meetingCode, setMeetingCode] = useState('')
   const [isPrivateRoom, setIsPrivateRoom] = useState(false)
+  const [showMeetingCodeError, setShowMeetingCodeError] = useState(false)
 
   const {
     roomName,
@@ -133,17 +134,25 @@ export function Home({ userId }: HomeProps) {
           </FormControl>
           {/* Meeting Code Field (only visible for private rooms) */}
           {isPrivateRoom && (
-            <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-              <TextField
-                label="Meeting Code"
-                variant="outlined"
-                type="text"
-                value={meetingCode}
-                onChange={e => setMeetingCode(e.target.value)}
-                placeholder="Enter a code for your meeting"
-                size="medium"
-              />
-            </FormControl>
+            <>
+              <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
+                <TextField
+                  label="Meeting Code"
+                  variant="outlined"
+                  type="text"
+                  value={meetingCode}
+                  onChange={e => setMeetingCode(e.target.value)}
+                  placeholder="Enter a code for your meeting"
+                  size="medium"
+                  error={!meetingCode && showMeetingCodeError}
+                />
+              </FormControl>
+              {!meetingCode && showMeetingCodeError && (
+                <Typography color="error" sx={{ mt: 1 }}>
+                  Please enter a meeting code for private rooms
+                </Typography>
+              )}
+            </>
           )}
           <Box sx={{ mt: 2, mb: 2 }}>
             <ToggleButtonGroup
@@ -172,9 +181,10 @@ export function Home({ userId }: HomeProps) {
               onClick={() => {
                 if (isPrivateRoom) {
                   if (meetingCode) {
+                    setShowMeetingCodeError(false)
                     handleJoinPrivateRoomClick(meetingCode)
                   } else {
-                    alert('Please enter a meeting code for private rooms')
+                    setShowMeetingCodeError(true)
                     return
                   }
                 } else {
