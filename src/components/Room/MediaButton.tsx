@@ -6,7 +6,7 @@ interface MediaButtonProps extends Partial<FabProps> {
 }
 
 export const MediaButton = forwardRef<HTMLButtonElement, MediaButtonProps>(
-  ({ isActive, ...props }: MediaButtonProps, ref) => {
+  ({ isActive, sx, ...props }: MediaButtonProps, ref) => {
     return (
       <Fab
         {...props}
@@ -24,6 +24,7 @@ export const MediaButton = forwardRef<HTMLButtonElement, MediaButtonProps>(
               backgroundColor: '#0052cc',
             },
           }),
+          ...sx, // Allow parent components to override styles
         }}
       />
     )

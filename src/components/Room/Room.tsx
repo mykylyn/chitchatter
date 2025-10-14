@@ -18,6 +18,7 @@ import { time } from 'lib/Time'
 import { encryption } from 'services/Encryption'
 
 import { RoomAudioControls } from './RoomAudioControls'
+import { RoomEndCallControl } from './RoomEndCallControl'
 import { RoomFileUploadControls } from './RoomFileUploadControls'
 import { RoomScreenShareControls } from './RoomScreenShareControls'
 import { RoomShowMessagesControls } from './RoomShowMessagesControls'
@@ -145,6 +146,7 @@ const RoomCore = ({
                   peerRoom={peerRoom}
                   onInlineMediaUpload={handleInlineMediaUpload}
                 />
+                <RoomEndCallControl />
                 <Zoom in={showVideoDisplay} mountOnEnter unmountOnExit>
                   <span>
                     <RoomShowMessagesControls />
