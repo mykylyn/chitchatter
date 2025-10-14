@@ -1,5 +1,4 @@
 import { useContext } from 'react'
-import { Link } from 'react-router-dom'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -11,18 +10,14 @@ import useTheme from '@mui/material/styles/useTheme'
 import { Cached } from '@mui/icons-material'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-//import styled from '@mui/material/styles/styled'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import MuiLink from '@mui/material/Link'
 import Divider from '@mui/material/Divider'
-
-//import Logo from 'img/logo.svg?react'
 
 import { Form, Main } from 'components/Elements'
 import { PeerNameDisplay } from 'components/PeerNameDisplay'
 import { EnhancedConnectivityControl } from 'components/EnhancedConnectivityControl'
 import { SettingsContext } from 'contexts/SettingsContext'
-//import { routes } from 'config/routes'
 import { RoomNameType } from 'lib/RoomNameGenerator'
 
 import { isEnhancedConnectivityAvailable } from '../../config/enhancedConnectivity'
@@ -30,8 +25,6 @@ import { isEnhancedConnectivityAvailable } from '../../config/enhancedConnectivi
 import { useHome } from './useHome'
 import { EmbedCodeDialog } from './EmbedCodeDialog'
 import { CommunityRoomSelector } from './CommunityRoomSelector'
-
-//const StyledLogo = styled(Logo)({})
 
 export interface HomeProps {
   userId: string

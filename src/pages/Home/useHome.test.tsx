@@ -127,10 +127,15 @@ describe('useHome Hook', () => {
     })
 
     act(() => {
-      result.current.handleJoinPrivateRoomClick()
+      result.current.handleJoinPrivateRoomClick('testMeetingCode')
     })
 
-    expect(navigate).toHaveBeenCalledWith(`/private/${result.current.roomName}`)
+    expect(navigate).toHaveBeenCalledWith(
+      `/private/${result.current.roomName}`,
+      {
+        state: { meetingCode: 'testMeetingCode' },
+      }
+    )
   })
 
   it('should set showEmbedCode to true when handleGetEmbedCodeClick is called', () => {
