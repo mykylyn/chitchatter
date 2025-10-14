@@ -11,17 +11,17 @@ import { Cached } from '@mui/icons-material'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import Divider from '@mui/material/Divider'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 import { Form, Main } from 'components/Elements'
 import { PeerNameDisplay } from 'components/PeerNameDisplay'
 import { EnhancedConnectivityControl } from 'components/EnhancedConnectivityControl'
 import { SettingsContext } from 'contexts/SettingsContext'
-import { RoomNameType } from 'lib/RoomNameGenerator'
 
 import { isEnhancedConnectivityAvailable } from '../../config/enhancedConnectivity'
 
 import { useHome } from './useHome'
-import { EmbedCodeDialog } from './EmbedCodeDialog'
+//import { EmbedCodeDialog } from './EmbedCodeDialog'
 
 export interface HomeProps {
   userId: string
@@ -35,21 +35,24 @@ export function Home({ userId }: HomeProps) {
   // State for meeting code, room type, and error state
   const [meetingCode, setMeetingCode] = useState('')
   const [isPrivateRoom, setIsPrivateRoom] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [showMeetingCodeError, setShowMeetingCodeError] = useState(false)
 
   const {
     roomName,
-    roomNameType,
-    showEmbedCode,
+    roomNameType: _roomNameType,
+    //showEmbedCode,
     handleRoomNameChange,
-    handleRoomNameTypeChange,
+    handleRoomNameTypeChange: _handleRoomNameTypeChange,
     regenerateRoomName,
     handleFormSubmit,
     handleJoinPublicRoomClick,
     handleJoinPrivateRoomClick,
-    handleEmbedCodeWindowClose,
+    //handleEmbedCodeWindowClose,
     isRoomNameValid,
   } = useHome()
+
+  // No action needed as meetingCode is not saved to localStorage
 
   const handleIsEnhancedConnectivityEnabledChange = (
     _event: React.ChangeEvent<{}>,
@@ -62,11 +65,11 @@ export function Home({ userId }: HomeProps) {
 
   return (
     <Box className="Home">
-      <EmbedCodeDialog
+      {/* <EmbedCodeDialog
         showEmbedCode={showEmbedCode}
         handleEmbedCodeWindowClose={handleEmbedCodeWindowClose}
         roomName={roomName}
-      />
+      /> */}
       <Main
         sx={{
           maxWidth: theme.breakpoints.values.md,
@@ -139,14 +142,26 @@ export function Home({ userId }: HomeProps) {
                 <TextField
                   label="Meeting Code"
                   variant="outlined"
-                  type="text"
+                  type={showPassword ? 'text' : 'password'}
                   value={meetingCode}
                   onChange={e => setMeetingCode(e.target.value)}
                   placeholder="Enter a code for your meeting"
                   size="medium"
                   error={!meetingCode && showMeetingCodeError}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        aria-label="toggle meeting code visibility"
+                        onClick={() => setShowPassword(prev => !prev)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    ),
+                  }}
                 />
               </FormControl>
+
               {!meetingCode && showMeetingCodeError && (
                 <Typography color="error" sx={{ mt: 1 }}>
                   Please enter a meeting code for private rooms
@@ -154,25 +169,6 @@ export function Home({ userId }: HomeProps) {
               )}
             </>
           )}
-          <Box sx={{ mt: 2, mb: 2 }}>
-            <ToggleButtonGroup
-              value={roomNameType}
-              exclusive
-              onChange={handleRoomNameTypeChange}
-              aria-label="room name type"
-              size="small"
-            >
-              <ToggleButton value={RoomNameType.UUID} aria-label="UUID">
-                UUID
-              </ToggleButton>
-              <ToggleButton
-                value={RoomNameType.PASSPHRASE}
-                aria-label="Passphrase"
-              >
-                Passphrase
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </Box>
           {/* Join Button */}
           <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center', mt: 2 }}>
             <Button

@@ -4,7 +4,8 @@ import { createTheme } from '@mui/material/styles'
 
 export const useShellTheme = () => {
   const { getUserSettings } = useContext(SettingsContext)
-  const { colorMode } = getUserSettings()
+  // Default colorMode to 'dark' if it's not set in user settings
+  const { colorMode = 'dark' } = getUserSettings()
 
   const theme = useMemo(
     () =>
