@@ -11,18 +11,18 @@ import useTheme from '@mui/material/styles/useTheme'
 import { Cached } from '@mui/icons-material'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-import styled from '@mui/material/styles/styled'
+//import styled from '@mui/material/styles/styled'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import MuiLink from '@mui/material/Link'
 import Divider from '@mui/material/Divider'
 
-import Logo from 'img/logo.svg?react'
+//import Logo from 'img/logo.svg?react'
 
 import { Form, Main } from 'components/Elements'
 import { PeerNameDisplay } from 'components/PeerNameDisplay'
 import { EnhancedConnectivityControl } from 'components/EnhancedConnectivityControl'
 import { SettingsContext } from 'contexts/SettingsContext'
-import { routes } from 'config/routes'
+//import { routes } from 'config/routes'
 import { RoomNameType } from 'lib/RoomNameGenerator'
 
 import { isEnhancedConnectivityAvailable } from '../../config/enhancedConnectivity'
@@ -31,7 +31,7 @@ import { useHome } from './useHome'
 import { EmbedCodeDialog } from './EmbedCodeDialog'
 import { CommunityRoomSelector } from './CommunityRoomSelector'
 
-const StyledLogo = styled(Logo)({})
+//const StyledLogo = styled(Logo)({})
 
 export interface HomeProps {
   userId: string
@@ -81,16 +81,6 @@ export function Home({ userId }: HomeProps) {
           textAlign: 'center',
         }}
       >
-        <Link to={routes.ABOUT} aria-label="Go to About page">
-          <StyledLogo
-            sx={{
-              px: 0.5,
-              pb: 2,
-              mx: 'auto',
-              maxWidth: theme.breakpoints.values.sm,
-            }}
-          />
-        </Link>
         <Form
           onSubmit={handleFormSubmit}
           sx={{ maxWidth: theme.breakpoints.values.sm, mx: 'auto' }}
