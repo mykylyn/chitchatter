@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import Box from '@mui/material/Box'
-import RecordVoiceOver from '@mui/icons-material/RecordVoiceOver'
-import VoiceOverOff from '@mui/icons-material/VoiceOverOff'
+import Mic from '@mui/icons-material/Mic'
+import MicOff from '@mui/icons-material/MicOff'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
@@ -90,7 +90,7 @@ export function RoomAudioControls({ peerRoom }: RoomAudioControlsProps) {
           aria-label="call"
           onClick={handleVoiceCallClick}
         >
-          {isSpeakingToRoom ? <RecordVoiceOver /> : <VoiceOverOff />}
+          {isSpeakingToRoom ? <Mic /> : <MicOff />}
         </MediaButton>
       </Tooltip>
       {audioDevices.length > 0 && isSpeakingToRoom && (

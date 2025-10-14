@@ -11,38 +11,20 @@ export const MediaButton = forwardRef<HTMLButtonElement, MediaButtonProps>(
       <Fab
         {...props}
         ref={ref}
-        sx={theme =>
-          theme.palette.mode === 'dark'
-            ? isActive
-              ? {
-                  color: theme.palette.common.white,
-                  background: theme.palette.success.main,
-                  '&:hover': {
-                    background: theme.palette.success.dark,
-                  },
-                }
-              : {
-                  background: theme.palette.grey[500],
-                  '&:hover': {
-                    background: theme.palette.grey[600],
-                  },
-                }
-            : isActive
-              ? {
-                  color: theme.palette.common.white,
-                  background: theme.palette.success.main,
-                  '&:hover': {
-                    background: theme.palette.success.dark,
-                  },
-                }
-              : {
-                  color: theme.palette.common.black,
-                  background: theme.palette.grey[400],
-                  '&:hover': {
-                    background: theme.palette.grey[500],
-                  },
-                }
-        }
+        color={isActive ? 'primary' : 'secondary'}
+        sx={{
+          width: 64,
+          height: 64,
+          minHeight: 64,
+          ...(isActive && {
+            backgroundColor: '#0062f5',
+            color: '#ffffff',
+            '&:hover': {
+              color: '#000',
+              backgroundColor: '#0052cc',
+            },
+          }),
+        }}
       />
     )
   }
