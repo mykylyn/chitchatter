@@ -2,7 +2,6 @@ import {
   KeyboardEvent,
   SyntheticEvent,
   useContext,
-  useEffect,
   useRef,
   useState,
 } from 'react'
@@ -31,13 +30,6 @@ export const MessageForm = ({
   const { showActiveTypingStatus } = settingsContext.getUserSettings()
   const textFieldRef = useRef<HTMLInputElement>(null)
   const [textMessage, setTextMessage] = useState('')
-
-  useEffect(() => {
-    const { current: textField } = textFieldRef
-    if (!textField) return
-
-    textField.focus()
-  }, [textFieldRef])
 
   const canMessageBeSent = () => {
     return (

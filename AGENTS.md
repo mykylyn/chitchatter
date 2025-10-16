@@ -1,4 +1,4 @@
-# LLM Rules for Chitchatter Project
+# LLM Rules for Nexus Connect Project
 
 ## TypeScript Function Definitions
 

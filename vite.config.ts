@@ -3,6 +3,8 @@ import path from 'path'
 
 import { fileURLToPath } from 'url'
 
+import fs from 'fs'
+
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
@@ -39,14 +41,11 @@ const config = () => {
     // "chitchatter", then use that instead of "chitchatter" here.
     // base: '/chitchatter/',
     server: {
-      proxy: {
-        '/api': {
-          target: process.env.IS_E2E_TEST
-            ? 'http://localhost:3003'
-            : 'http://localhost:3001',
-          changeOrigin: true,
-          secure: false,
-        },
+      host: '0.0.0.0', // bind to LAN
+      port: 3000,
+      https: {
+        key: fs.readFileSync('./key.pem'),
+        cert: fs.readFileSync('./cert.pem'),
       },
     },
     build: {

@@ -515,7 +515,15 @@ export function useRoom(
       Object.values({ ...peerVideoStreams, ...peerScreenStreams }).length > 0
   )
 
-  if (!showVideoDisplay && !isShowingMessages) setIsShowingMessages(true)
+  // Handle video activation/deactivation in useEffect to avoid re-render loops
+  useEffect(() => {
+    if (showVideoDisplay) {
+      setIsShowingMessages(false)
+    } else if (!isShowingMessages) {
+      // Auto-show messages when video is turned off
+      setIsShowingMessages(true)
+    }
+  }, [showVideoDisplay, isShowingMessages, setIsShowingMessages])
 
   const handleInlineMediaUpload = async (files: File[]) => {
     const fileOfferId = await fileTransferService.fileTransfer.offer(
