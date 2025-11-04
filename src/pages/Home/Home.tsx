@@ -16,6 +16,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { Form, Main } from 'components/Elements'
 import { PeerNameDisplay } from 'components/PeerNameDisplay'
 import { EnhancedConnectivityControl } from 'components/EnhancedConnectivityControl'
+import { RecentRoomCard } from 'components/Home/RecentRoomCard'
 import { SettingsContext } from 'contexts/SettingsContext'
 
 import { isEnhancedConnectivityAvailable } from '../../config/enhancedConnectivity'
@@ -64,7 +65,13 @@ export function Home({ userId }: HomeProps) {
   }
 
   return (
-    <Box className="Home">
+    <Box
+      className="Home"
+      sx={{
+        overflow: 'auto', // This makes the Box scrollable
+        height: '100vh', // Ensures the Box takes full viewport height to enable scrolling
+      }}
+    >
       {/* <EmbedCodeDialog
         showEmbedCode={showEmbedCode}
         handleEmbedCodeWindowClose={handleEmbedCodeWindowClose}
@@ -209,6 +216,18 @@ export function Home({ userId }: HomeProps) {
           </>
         )}
         <Divider sx={{ my: 2 }} />
+        <Box sx={{ textAlign: 'center' }}>
+          <h3>Recent meetings</h3>
+          {/* Placeholder for recent room cards. You'll want to map over actual recent meeting data here. */}
+          <RecentRoomCard name={'Example Room'} />
+          <RecentRoomCard name={'Example Room'} />
+          <RecentRoomCard name={'Example Room'} />
+          <RecentRoomCard name={'Example Room'} />
+          <RecentRoomCard name={'Example Room'} />
+          <RecentRoomCard name={'Example Room'} />
+          <RecentRoomCard name={'Example Room'} />
+          <RecentRoomCard name={'Example Room'} />
+        </Box>
       </Box>
     </Box>
   )
