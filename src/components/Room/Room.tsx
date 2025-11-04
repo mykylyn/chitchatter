@@ -3,7 +3,7 @@ import Divider from '@mui/material/Divider'
 import useTheme from '@mui/material/styles/useTheme'
 import Zoom from '@mui/material/Zoom'
 import { useWindowSize } from '@react-hook/window-size'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { v4 as uuid } from 'uuid'
 
 import { ChatTranscript } from 'components/ChatTranscript'
@@ -53,6 +53,10 @@ const RoomCore = ({
   targetPeerId,
   turnConfig,
 }: RoomInnerProps) => {
+  useEffect(() => {
+    console.log(`Room component is running: ${roomId}`)
+  }, []) // Empty dependency array ensures this runs only once on mount
+
   const theme = useTheme()
   const settingsContext = useContext(SettingsContext)
   const { showActiveTypingStatus, publicKey } =
