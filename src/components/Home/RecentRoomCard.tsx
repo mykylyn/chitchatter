@@ -32,7 +32,7 @@ export const RecentRoomCard = ({ name }: RecentRoomCardProps) => {
         },
       }}
     >
-            {/* STEP 2: Icon Container */}     {' '}
+      {/* STEP 2: Icon Container */}
       <Box
         sx={{
           width: 40,
@@ -47,10 +47,10 @@ export const RecentRoomCard = ({ name }: RecentRoomCardProps) => {
           flexShrink: 0,
         }}
       >
-                <Typography variant="h6">{firstLetter}</Typography>     {' '}
+        <Typography variant="h6">{firstLetter}</Typography>
       </Box>
-            {/* The meeting name Typography */}     {' '}
-      <Typography variant="body1">{name}</Typography>   {' '}
+      {/* The meeting name Typography */}
+      <Typography variant="body1">{name}</Typography>
     </Box>
   )
 }
