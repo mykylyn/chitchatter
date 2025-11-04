@@ -54,7 +54,7 @@ const RoomCore = ({
   turnConfig,
 }: RoomInnerProps) => {
   useEffect(() => {
-    console.log(`Room component is running: ${roomId}`)
+    console.log(`Room component is running:`)
   }, []) // Empty dependency array ensures this runs only once on mount
 
   const theme = useTheme()
