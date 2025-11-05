@@ -1,5 +1,7 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton' // Import IconButton
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos' // Import ArrowForwardIosIcon
 import useTheme from '@mui/material/styles/useTheme'
 
 export interface RecentRoomCardProps {
@@ -14,43 +16,48 @@ export const RecentRoomCard = ({ name }: RecentRoomCardProps) => {
   return (
     <Box
       sx={{
-        // STEP 3: Adjust layout for icon on the left
         display: 'flex',
-        justifyContent: 'flex-start', // Aligns icon and text to the left
+        justifyContent: 'space-between', // Changed to space-between to push icon to the right
         alignItems: 'center',
-        flexDirection: 'row', // Lays out children horizontally
-        // Existing styles remain
+        flexDirection: 'row',
         padding: theme.spacing(2),
         margin: theme.spacing(1),
-        boxShadow: theme.shadows[3], // Applying a shadow
+        boxShadow: theme.shadows[3],
         borderRadius: theme.shape.borderRadius,
         cursor: 'pointer',
         backgroundColor: theme.palette.background.paper,
         transition: 'box-shadow 0.3s ease-in-out',
         '&:hover': {
-          boxShadow: theme.shadows[6], // Enhanced shadow on hover
+          boxShadow: theme.shadows[6],
         },
       }}
     >
-      {/* STEP 2: Icon Container */}
-      <Box
-        sx={{
-          width: 40,
-          height: 40,
-          borderRadius: '50%', // Circle shape
-          backgroundColor: theme.palette.primary.main,
-          color: theme.palette.primary.contrastText,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginRight: theme.spacing(2), // Space to the right of the icon
-          flexShrink: 0,
-        }}
-      >
-        <Typography variant="h6">{firstLetter}</Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {/* STEP 2: Icon Container */}
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: theme.spacing(2),
+            flexShrink: 0,
+          }}
+        >
+          <Typography variant="h6">{firstLetter}</Typography>
+        </Box>
+        {/* The meeting name Typography */}
+        <Typography variant="body1">{name}</Typography>
       </Box>
-      {/* The meeting name Typography */}
-      <Typography variant="body1">{name}</Typography>
+
+      {/* New: Arrow button on the right */}
+      <IconButton aria-label="go to room">
+        <ArrowForwardIosIcon />
+      </IconButton>
     </Box>
   )
 }
