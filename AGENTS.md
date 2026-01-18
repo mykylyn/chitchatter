@@ -1,4 +1,4 @@
-# LLM Rules for Nexus Connect Project
+# LLM Rules for Blitz Meet Project
 
 ## TypeScript Function Definitions
 

@@ -1,9 +1,7 @@
 import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
-import useTheme from '@mui/material/styles/useTheme'
 import Zoom from '@mui/material/Zoom'
 import { useWindowSize } from '@react-hook/window-size'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
 import { ChatTranscript } from 'components/ChatTranscript'
@@ -18,9 +16,10 @@ import { time } from 'lib/Time'
 import { encryption } from 'services/Encryption'
 
 import { RoomAudioControls } from './RoomAudioControls'
+import { RoomBottomNavigation } from './RoomBottomNavigation'
 import { RoomEndCallControl } from './RoomEndCallControl'
-import { RoomFileUploadControls } from './RoomFileUploadControls'
-import { RoomScreenShareControls } from './RoomScreenShareControls'
+// import { RoomFileUploadControls } from './RoomFileUploadControls'
+// import { RoomScreenShareControls } from './RoomScreenShareControls'
 import { RoomShowMessagesControls } from './RoomShowMessagesControls'
 import { RoomVideoControls } from './RoomVideoControls'
 import { RoomVideoDisplay } from './RoomVideoDisplay'
@@ -55,16 +54,15 @@ const RoomCore = ({
 }: RoomInnerProps) => {
   useEffect(() => {
     console.log(`Room component is running:`)
-  }, []) // Empty dependency array ensures this runs only once on mount
+  }, [])
 
-  const theme = useTheme()
   const settingsContext = useContext(SettingsContext)
   const { showActiveTypingStatus, publicKey } =
     settingsContext.getUserSettings()
 
   const {
     isDirectMessageRoom,
-    handleInlineMediaUpload,
+    // handleInlineMediaUpload,
     handleMessageChange,
     isMessageSending,
     messageLog,
@@ -79,8 +77,6 @@ const RoomCore = ({
       password,
       relayRedundancy: 4,
       turnConfig: turnConfig.iceServers,
-      // NOTE: Avoid using STUN severs in the E2E tests in order to make them
-      // run faster
       ...(import.meta.env.VITE_IS_E2E_TEST && {
         rtcConfig: {
           iceServers: [],
@@ -108,8 +104,12 @@ const RoomCore = ({
 
   const showMessages = roomContextValue.isShowingMessages
 
-  // NOTE: If rtcConfig fails to load, the useRtcConfig hook provides a
-  // fallback so the room will continue to work with default settings
+  // State for bottom navigation tabs (0 = Call, 1 = Chat)
+  const [activeTab, setActiveTab] = useState(0)
+
+  const handleTabChange = (tab: number) => {
+    setActiveTab(tab)
+  }
 
   return (
     <RoomContext.Provider value={roomContextValue}>
@@ -118,47 +118,23 @@ const RoomCore = ({
         sx={{
           height: '100%',
           display: 'flex',
-          flexGrow: '1',
+          flexGrow: 1,
           overflow: 'auto',
+          flexDirection: 'column',
         }}
       >
+        {/* Parent container */}
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            flexGrow: '1',
+            flexGrow: 1,
             overflow: 'auto',
+            position: 'relative', // Create positioning context for absolute children
+            width: '100%', // Ensure this container is full width for correct centering
+            paddingBottom: '80px', // Account for fixed bottom navigation height
           }}
         >
-          {!isDirectMessageRoom && (
-            <Zoom in={showRoomControls}>
-              <Box
-                sx={{
-                  alignItems: 'flex-start',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  overflow: 'visible',
-                  height: 0,
-                  position: 'relative',
-                  top: theme.spacing(1),
-                }}
-              >
-                <RoomAudioControls peerRoom={peerRoom} />
-                <RoomVideoControls peerRoom={peerRoom} />
-                <RoomScreenShareControls peerRoom={peerRoom} />
-                <RoomFileUploadControls
-                  peerRoom={peerRoom}
-                  onInlineMediaUpload={handleInlineMediaUpload}
-                />
-                <RoomEndCallControl />
-                <Zoom in={showVideoDisplay} mountOnEnter unmountOnExit>
-                  <span>
-                    <RoomShowMessagesControls />
-                  </span>
-                </Zoom>
-              </Box>
-            </Zoom>
-          )}
           <Box
             sx={{
               display: 'flex',
@@ -168,29 +144,43 @@ const RoomCore = ({
               overflow: 'auto',
             }}
           >
-            {showVideoDisplay && (
-              <RoomVideoDisplay
-                userId={userId}
-                width="100%"
-                height={landscape || !showMessages ? '100%' : '60%'}
-              />
-            )}
-            {showMessages && (
+            {showVideoDisplay &&
+              activeTab === 0 && ( // Only show video when on Call tab
+                <RoomVideoDisplay
+                  userId={userId}
+                  width="100%"
+                  height={landscape || !showMessages ? '100%' : '60%'}
+                />
+              )}
+
+            {/* Show chat content when Chat tab is selected */}
+            {activeTab === 1 && (
               <Box
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
-                  flexGrow: '1',
+                  flexGrow: 1,
                   width: showVideoDisplay && landscape ? '400px' : '100%',
-                  height: landscape ? '100%' : '40%',
+                  height: '100%',
+                  paddingTop: 1,
                 }}
               >
-                <ChatTranscript
-                  messageLog={messageLog}
-                  userId={userId}
-                  sx={{ ...(isDirectMessageRoom && { pt: 1 }) }}
-                />
-                <Divider />
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                    overflow: 'auto',
+                    mb: 1,
+                  }}
+                >
+                  <ChatTranscript
+                    messageLog={messageLog}
+                    userId={userId}
+                    sx={{
+                      ...(isDirectMessageRoom && { pt: 1 }),
+                      height: '100%',
+                    }}
+                  />
+                </Box>
                 <Box>
                   <MessageForm
                     onMessageSubmit={handleMessageSubmit}
@@ -206,7 +196,61 @@ const RoomCore = ({
               </Box>
             )}
           </Box>
+
+          {/* Show call controls only when on Call tab */}
+          {activeTab === 0 && !isDirectMessageRoom && (
+            <Zoom in={showRoomControls}>
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  overflow: 'visible',
+                  position: 'absolute',
+                  bottom: '96px', // Positioned above the bottom navigation (80px height + 16px padding)
+                  left: 0,
+                  right: 0,
+                  zIndex: 1000,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-around', // Distribute items with equal space around
+                    backgroundColor: theme =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(0, 0, 0, 0.4)'
+                        : 'rgba(255, 255, 255, 0.9)',
+                    backdropFilter: 'blur(10px)',
+                    borderRadius: 4,
+                    padding: 1.5,
+                    boxShadow: 3,
+                    width: '90%',
+                    maxWidth: '700px',
+                    overflow: 'hidden',
+                    flexWrap: 'nowrap', // Prevent wrapping to maintain horizontal layout
+                  }}
+                >
+                  <RoomAudioControls peerRoom={peerRoom} />
+                  <RoomVideoControls peerRoom={peerRoom} />
+                  {/*<RoomScreenShareControls peerRoom={peerRoom} />
+                  <RoomFileUploadControls
+                    peerRoom={peerRoom}
+                    onInlineMediaUpload={handleInlineMediaUpload}
+                  />*/}
+                  <RoomEndCallControl />
+                  <Zoom in={showVideoDisplay} mountOnEnter unmountOnExit>
+                    <span>
+                      <RoomShowMessagesControls />
+                    </span>
+                  </Zoom>
+                </Box>
+              </Box>
+            </Zoom>
+          )}
         </Box>
+        <RoomBottomNavigation initialTab={0} onTabChange={handleTabChange} />
       </Box>
     </RoomContext.Provider>
   )
@@ -216,7 +260,6 @@ export const Room = (props: RoomProps) => {
   const { isEnhancedConnectivityEnabled } =
     useContext(SettingsContext).getUserSettings()
 
-  // Fetch rtcConfig from server
   const { turnConfig, isLoading: isConfigLoading } = useTurnConfig(
     isEnhancedConnectivityEnabled
   )

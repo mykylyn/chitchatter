@@ -1,6 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 import { v4 as uuid } from 'uuid'
 
 import { encryption } from 'services/Encryption'
@@ -8,7 +10,7 @@ import {
   EnvironmentUnsupportedDialog,
   isEnvironmentSupported,
 } from 'components/Shell/EnvironmentUnsupportedDialog'
-import { WholePageLoading } from 'components/Loading/Loading'
+import { SplashScreen } from 'components/Loading/SplashScreen'
 import { ColorMode, UserSettings } from 'models/settings'
 
 import { DEFAULT_SOUND } from 'config/soundNames'
@@ -76,11 +78,18 @@ const Init = ({ getUuid = uuid, ...props }: InitProps) => {
   }
 
   if (userSettings === null) {
-    return <WholePageLoading />
+    return <SplashScreen />
   }
 
   return (
-    <Suspense fallback={<WholePageLoading />}>
+    <Suspense
+      fallback={
+        <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
+          <CssBaseline />
+          <SplashScreen />
+        </ThemeProvider>
+      }
+    >
       <Bootstrap {...props} initialUserSettings={userSettings} />
     </Suspense>
   )

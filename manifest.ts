@@ -1,8 +1,8 @@
 import { ManifestOptions } from 'vite-plugin-pwa'
 
 export const manifest: Partial<ManifestOptions> = {
-  short_name: 'Nexus Connect',
-  name: 'Nexus Connect',
+  short_name: 'Blitz Meet',
+  name: 'Blitz Meet',
   description:
     'This is a communication tool that is free, open source, and designed for simplicity and security. All communication between you and your online peers is encrypted. There is no trace of your conversation once you leave.',
   icons: [

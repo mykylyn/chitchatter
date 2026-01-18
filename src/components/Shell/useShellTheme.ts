@@ -16,26 +16,29 @@ export const useShellTheme = () => {
         palette: {
           mode: colorMode,
           primary: {
-            main: colorMode === 'dark' ? '#0062f5' : '#0062f5', // Blue accent for buttons/FAB
+            main: '#194ce6', // Updated primary color
           },
           secondary: {
-            main: colorMode === 'dark' ? '#6b7280' : '#6b7280', // Neutral gray for inactive buttons
+            main: colorMode === 'dark' ? '#93a0c8' : '#8E8E93', // Updated secondary
           },
           text: {
-            primary: colorMode === 'dark' ? '#ffffff' : '#101418', // Main text
-            secondary: colorMode === 'dark' ? '#b0b0b0' : '#5e718d', // Subtle text
+            primary: colorMode === 'dark' ? '#ffffff' : '#1C1C1E', // Updated text colors
+            secondary: colorMode === 'dark' ? '#93a0c8' : '#8E8E93',
           },
           background: {
-            default: colorMode === 'dark' ? '#121212' : '#ffffff', // Backgrounds
-            paper: colorMode === 'dark' ? '#1e1e1e' : '#ffffff', // For cards/lists
+            default: colorMode === 'dark' ? '#111521' : '#f6f6f8', // Updated backgrounds
+            paper: colorMode === 'dark' ? '#1a2032' : '#ffffff',
           },
-          divider: colorMode === 'dark' ? '#333333' : '#f0f2f5', // Borders/dividers
+          divider: colorMode === 'dark' ? '#344065' : '#e5e7eb', // Updated dividers
+        },
+        shape: {
+          borderRadius: 4, // Default 0.25rem
         },
         components: {
           MuiButton: {
             styleOverrides: {
               root: {
-                borderRadius: '20px',
+                borderRadius: '12px', // 0.75rem
                 textTransform: 'none',
                 fontWeight: 700,
                 letterSpacing: '0.015em',
@@ -43,30 +46,21 @@ export const useShellTheme = () => {
                 padding: '8px 20px',
               },
               outlined: {
-                borderColor: colorMode === 'dark' ? '#4a5568' : '#a8bbd4',
-                backgroundColor: colorMode === 'dark' ? '#1e1e1e' : '#ffffff',
-                color: colorMode === 'dark' ? '#ffffff' : '#101418',
-                borderWidth: '2px',
+                borderColor: colorMode === 'dark' ? '#344065' : '#e5e7eb',
+                backgroundColor: colorMode === 'dark' ? '#1a2032' : '#ffffff',
+                color: colorMode === 'dark' ? '#ffffff' : '#1C1C1E',
+                borderWidth: '1px',
                 '&:hover': {
-                  backgroundColor: colorMode === 'dark' ? '#2d3748' : '#f8f9fa',
-                  borderColor: colorMode === 'dark' ? '#718096' : '#8fa8c4',
-                  borderWidth: '2px',
-                },
-                '&.Mui-selected': {
-                  backgroundColor: '#0062f5',
-                  color: '#ffffff',
-                  borderColor: '#0062f5',
-                  '&:hover': {
-                    backgroundColor: '#0052cc',
-                    borderColor: '#0052cc',
-                  },
+                  backgroundColor: colorMode === 'dark' ? '#1a2032' : '#f6f6f8',
+                  borderColor: '#194ce6',
                 },
               },
               contained: {
-                backgroundColor: '#0062f5',
+                backgroundColor: '#194ce6',
                 color: '#ffffff',
+                borderRadius: '12px', // xl rounded
                 '&:hover': {
-                  backgroundColor: '#0052cc',
+                  backgroundColor: '#194ce6',
                 },
               },
             },
@@ -74,29 +68,25 @@ export const useShellTheme = () => {
           MuiToggleButton: {
             styleOverrides: {
               root: {
-                borderRadius: '20px',
+                borderRadius: '8px', // Smaller for segmented control
                 textTransform: 'none',
-                fontWeight: 600,
+                fontWeight: 500,
                 letterSpacing: '0.015em',
-                minHeight: '40px',
                 padding: '8px 16px',
-                border:
-                  colorMode === 'dark'
-                    ? '2px solid #4a5568'
-                    : '2px solid #c7d2e0',
-                backgroundColor: colorMode === 'dark' ? '#1e1e1e' : '#ffffff',
-                color: colorMode === 'dark' ? '#ffffff' : '#101418',
+                border: 'none',
+                backgroundColor: 'transparent',
+                color: colorMode === 'dark' ? '#93a0c8' : '#8E8E93',
                 '&:hover': {
-                  backgroundColor: colorMode === 'dark' ? '#2d3748' : '#f8f9fa',
-                  borderColor: colorMode === 'dark' ? '#718096' : '#a8bbd4',
+                  backgroundColor: 'transparent',
                 },
                 '&.Mui-selected': {
-                  backgroundColor: '#0062f5',
-                  color: '#ffffff',
-                  borderColor: '#0062f5',
+                  backgroundColor: colorMode === 'dark' ? '#0f1420' : '#f0f2f5',
+                  color: colorMode === 'dark' ? '#ffffff' : '#1C1C1E',
+                  fontWeight: 'bold',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                   '&:hover': {
-                    backgroundColor: '#0052cc',
-                    borderColor: '#0052cc',
+                    backgroundColor:
+                      colorMode === 'dark' ? '#0f1420' : '#f0f2f5',
                   },
                 },
               },
@@ -105,15 +95,22 @@ export const useShellTheme = () => {
           MuiIconButton: {
             styleOverrides: {
               root: {
-                color: colorMode === 'dark' ? '#ffffff' : '#101418',
+                color: colorMode === 'dark' ? '#ffffff' : '#1C1C1E',
                 backgroundColor: 'transparent',
+                borderRadius: '8px', // rounded-lg
                 '&:hover': {
-                  backgroundColor: colorMode === 'dark' ? '#2d3748' : '#f8f9fa',
-                  color: '#0062f5',
+                  backgroundColor:
+                    colorMode === 'dark'
+                      ? 'rgba(255,255,255,0.08)'
+                      : 'rgba(0,0,0,0.04)',
+                  color: '#194ce6',
                 },
                 '&:focus': {
-                  backgroundColor: colorMode === 'dark' ? '#333333' : '#f0f2f5',
-                  color: '#0062f5',
+                  backgroundColor:
+                    colorMode === 'dark'
+                      ? 'rgba(255,255,255,0.08)'
+                      : 'rgba(0,0,0,0.04)',
+                  color: '#194ce6',
                 },
               },
             },
@@ -185,21 +182,16 @@ export const useShellTheme = () => {
                 '& .MuiOutlinedInput-root': {
                   height: 56,
                   borderRadius: 12,
-                  backgroundColor: colorMode === 'dark' ? '#2d3748' : '#f8f9fa',
-                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                  backgroundColor: colorMode === 'dark' ? '#1a2032' : '#ffffff',
                   '& fieldset': {
-                    borderColor: colorMode === 'dark' ? '#4a5568' : '#9ca3af',
-                    borderWidth: '1.5px',
+                    borderColor: colorMode === 'dark' ? '#344065' : '#e5e7eb',
+                    borderWidth: '1px',
                   },
                   '&:hover fieldset': {
-                    borderColor: colorMode === 'dark' ? '#718096' : '#6b7280',
-                    borderWidth: '2px',
-                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
+                    borderColor: '#194ce6',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#0062f5',
-                    borderWidth: '2px',
-                    boxShadow: '0 0 0 3px rgba(0, 98, 245, 0.1)',
+                    borderColor: '#194ce6',
                   },
                 },
               },
@@ -224,12 +216,12 @@ export const useShellTheme = () => {
           MuiOutlinedInput: {
             styleOverrides: {
               input: {
-                padding: '12px 16px',
+                padding: '15px',
                 fontSize: '1rem',
-                color: colorMode === 'dark' ? '#ffffff' : '#101418',
+                color: colorMode === 'dark' ? '#ffffff' : '#1C1C1E',
                 '&::placeholder': {
-                  color: colorMode === 'dark' ? '#b0b0b0' : '#5e718d',
-                  opacity: 1, // Increased for better placeholder visibility
+                  color: colorMode === 'dark' ? '#93a0c8' : '#8E8E93',
+                  opacity: 1,
                 },
               },
             },
@@ -240,13 +232,42 @@ export const useShellTheme = () => {
                 fontWeight: 700,
                 fontSize: '1.125rem',
                 letterSpacing: '-0.015em',
-                color: colorMode === 'dark' ? '#ffffff' : undefined,
+                color: colorMode === 'dark' ? '#ffffff' : '#1C1C1E',
               },
               h5: {
                 fontSize: '1.375rem',
                 fontWeight: 700,
                 letterSpacing: '-0.015em',
-                color: colorMode === 'dark' ? '#ffffff' : undefined,
+                color: colorMode === 'dark' ? '#ffffff' : '#1C1C1E',
+              },
+            },
+          },
+          MuiAccordion: {
+            styleOverrides: {
+              root: {
+                backgroundColor: 'transparent',
+                boxShadow: 'none',
+                '&:before': {
+                  display: 'none',
+                },
+              },
+            },
+          },
+          MuiAccordionSummary: {
+            styleOverrides: {
+              root: {
+                padding: '12px 0',
+                minHeight: 'auto',
+                '& .MuiAccordionSummary-content': {
+                  margin: 0,
+                },
+              },
+            },
+          },
+          MuiAccordionDetails: {
+            styleOverrides: {
+              root: {
+                padding: '8px 0 0 0',
               },
             },
           },

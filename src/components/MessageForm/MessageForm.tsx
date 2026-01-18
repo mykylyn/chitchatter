@@ -9,7 +9,7 @@ import FormControl from '@mui/material/FormControl'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Fab from '@mui/material/Fab'
-import ArrowUpward from '@mui/icons-material/ArrowUpward'
+import SendIcon from '@mui/icons-material/Send'
 
 import { messageCharacterSizeLimit } from 'config/messaging'
 import { SettingsContext } from 'contexts/SettingsContext'
@@ -80,31 +80,62 @@ export const MessageForm = ({
         }),
       }}
     >
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={1} alignItems="center">
         <FormControl fullWidth>
           <TextField
             variant="outlined"
             value={textMessage}
             onChange={handleMessageChange}
             onKeyPress={handleMessageKeyPress}
-            size="medium"
+            size="small"
             placeholder="Your message"
             inputRef={textFieldRef}
             multiline
+            minRows={1}
+            maxRows={4}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 20, // Pill shape
+                backgroundColor: theme =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.08)'
+                    : 'rgba(0, 0, 0, 0.04)',
+                '& fieldset': {
+                  borderColor: theme =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.23)'
+                      : 'rgba(0, 0, 0, 0.23)',
+                },
+                '&:hover fieldset': {
+                  borderColor: theme =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.5)'
+                      : 'rgba(0, 0, 0, 0.87)',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: theme => theme.palette.primary.main,
+                },
+              },
+            }}
           />
         </FormControl>
         <Fab
           sx={{
             flexShrink: 0,
-            // The !important is needed to override a Stack style
-            marginTop: 'auto!important',
+            borderRadius: '50%', // Perfect circle
+            width: 36,
+            height: 36,
+            minWidth: 'auto', // Override default min width
+            // Align properly with the text field
+            alignSelf: 'center',
+            boxShadow: 1, // Subtle shadow
           }}
           aria-label="Send"
           type="submit"
           disabled={!canMessageBeSent()}
           color="primary"
         >
-          <ArrowUpward />
+          <SendIcon fontSize="small" />
         </Fab>
       </Stack>
     </Form>

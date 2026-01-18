@@ -9,15 +9,9 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import Slide from '@mui/material/Slide'
 import Zoom from '@mui/material/Zoom'
-import Divider from '@mui/material/Divider'
 
 import ExpandMore from '@mui/icons-material/ExpandMore'
-import Fullscreen from '@mui/icons-material/Fullscreen'
-import FullscreenExit from '@mui/icons-material/FullscreenExit'
-import Link from '@mui/icons-material/Link'
 import Menu from '@mui/icons-material/Menu'
-import QrCode2 from '@mui/icons-material/QrCode2'
-import RoomPreferences from '@mui/icons-material/RoomPreferences'
 
 import { useContext } from 'react'
 
@@ -34,30 +28,45 @@ interface AppBarProps extends MuiAppBarProps {
 export const AppBar = styled(MuiAppBar, {
   shouldForwardProp: prop =>
     prop !== 'isDrawerOpen' && prop !== 'isPeerListOpen',
-})<AppBarProps>(({ theme, isDrawerOpen, isPeerListOpen }) => ({
-  transition: theme.transitions.create(['margin', 'width'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(isDrawerOpen && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-  }),
-  ...(isPeerListOpen && {
-    width: `calc(100% - ${peerListWidth}px)`,
-    marginRight: `${peerListWidth}px`,
-  }),
-  ...((isDrawerOpen || isPeerListOpen) && {
+})<AppBarProps>(
+  ({ theme, isDrawerOpen, isPeerListOpen }) => ({
+    backgroundColor: theme.palette.background.default,
+    color: theme.palette.text.primary,
+    boxShadow: 'none',
+    '&.MuiAppBar-root, &.MuiPaper-root': {
+      backgroundColor: theme.palette.background.default,
+      backgroundImage: 'none',
+    },
     transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
     }),
+    ...(isDrawerOpen && {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: `${drawerWidth}px`,
+    }),
+    ...(isPeerListOpen && {
+      width: `calc(100% - ${peerListWidth}px)`,
+      marginRight: `${peerListWidth}px`,
+    }),
+    ...((isDrawerOpen || isPeerListOpen) && {
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+    ...(isDrawerOpen &&
+      isPeerListOpen && {
+        width: `calc(100% - ${drawerWidth}px - ${peerListWidth}px)`,
+      }),
   }),
-  ...(isDrawerOpen &&
-    isPeerListOpen && {
-      width: `calc(100% - ${drawerWidth}px - ${peerListWidth}px)`,
+  {
+    // Override any default AppBar styles
+    overridesResolver: (_props: any, styles: any) => ({
+      ...styles.root,
     }),
-}))
+  }
+)
 
 interface ShellAppBarProps {
   onDrawerOpen: () => void
@@ -73,23 +82,27 @@ interface ShellAppBarProps {
   setIsFullscreen: (isFullscreen: boolean) => void
 }
 
-export const ShellAppBar = ({
-  onDrawerOpen,
-  onLinkButtonClick,
-  isDrawerOpen,
-  isPeerListOpen,
-  setIsQRCodeDialogOpen,
-  title,
-  onPeerListClick,
-  onRoomControlsClick,
-  showAppBar,
-  isFullscreen,
-  setIsFullscreen,
-}: ShellAppBarProps) => {
+export const ShellAppBar = (props: ShellAppBarProps) => {
+  const {
+    onDrawerOpen,
+    onLinkButtonClick: _onLinkButtonClick,
+    isDrawerOpen,
+    isPeerListOpen,
+    setIsQRCodeDialogOpen: _setIsQRCodeDialogOpen,
+    title,
+    onPeerListClick,
+    onRoomControlsClick,
+    showAppBar,
+    isFullscreen: _isFullscreen,
+    setIsFullscreen: _setIsFullscreen,
+  } = props
+
   const theme = useTheme()
-  const { peerList, isEmbedded, showRoomControls } = useContext(ShellContext)
-  const handleQRCodeClick = () => setIsQRCodeDialogOpen(true)
-  const onClickFullscreen = () => setIsFullscreen(!isFullscreen)
+  const {
+    peerList,
+    isEmbedded,
+    showRoomControls: _showRoomControls,
+  } = useContext(ShellContext)
 
   return (
     <>
@@ -104,7 +117,8 @@ export const ShellAppBar = ({
             sx={{
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'right',
+              alignItems: 'center',
+              backgroundColor: 'transparent',
             }}
           >
             {isEmbedded ? null : (
@@ -113,35 +127,43 @@ export const ShellAppBar = ({
                 edge="start"
                 color="inherit"
                 aria-label="Open menu"
-                sx={{ mr: 2, ...(isDrawerOpen && { display: 'none' }) }}
+                sx={{
+                  mr: 2,
+                  ...(isDrawerOpen && { display: 'none' }),
+                  color: theme.palette.text.primary,
+                }}
                 onClick={onDrawerOpen}
               >
                 <Menu />
               </IconButton>
             )}
 
-            {isEmbedded ? null : (
-              <Tooltip title={title}>
-                <Typography
-                  variant="h6"
-                  noWrap
-                  component="div"
-                  sx={{
-                    marginRight: 'auto',
-                  }}
-                >
-                  {title}
-                </Typography>
-              </Tooltip>
-            )}
+            <Tooltip title={title}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{
+                  mx: 'auto',
+                  color: theme.palette.text.primary,
+                }}
+              >
+                {title}
+              </Typography>
+            </Tooltip>
+
             {isEmbedded ? null : (
               <>
+                {/* Commenting out these buttons temporarily
                 <Tooltip title="Copy current URL">
                   <IconButton
                     size="large"
                     color="inherit"
                     aria-label="Copy current URL"
-                    onClick={onLinkButtonClick}
+                    onClick={_onLinkButtonClick}
+                    sx={{
+                      color: theme.palette.text.primary,
+                    }}
                   >
                     <Link />
                   </IconButton>
@@ -151,60 +173,75 @@ export const ShellAppBar = ({
                     size="large"
                     color="inherit"
                     aria-label="Show QR Code"
-                    onClick={handleQRCodeClick}
+                    onClick={_handleQRCodeClick}
+                    sx={{
+                      color: theme.palette.text.primary,
+                    }}
                   >
                     <QrCode2 />
                   </IconButton>
                 </Tooltip>
+                <Divider
+                  orientation="vertical"
+                  sx={{
+                    height: theme.spacing(3.5),
+                    mx: theme.spacing(1),
+                    backgroundColor: theme.palette.divider,
+                  }}
+                />
+                */}
+                {/*<Tooltip
+                  title={
+                    showRoomControls
+                      ? 'Hide Room Controls'
+                      : 'Show Room Controls'
+                  }
+                >
+                  <IconButton
+                    size="large"
+                    color="inherit"
+                    aria-label="show room controls"
+                    onClick={onRoomControlsClick}
+                    sx={{
+                      color: theme.palette.text.primary,
+                    }}
+                  >
+                    <RoomPreferences />
+                  </IconButton>
+                </Tooltip>*/}
+                {/*<Tooltip
+                  title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+                >
+                  <IconButton
+                    size="large"
+                    edge="end"
+                    color="inherit"
+                    aria-label="fullscreen"
+                    onClick={_onClickFullscreen}
+                    sx={{
+                      color: theme.palette.text.primary,
+                    }}
+                  >
+                    {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
+                  </IconButton>
+                </Tooltip>*/}
+                <Tooltip title="Click to show peer list">
+                  <IconButton
+                    size="large"
+                    edge="end"
+                    color="inherit"
+                    aria-label="Peer list"
+                    onClick={onPeerListClick}
+                    sx={{
+                      ml: 1,
+                      color: theme.palette.text.primary,
+                    }}
+                  >
+                    <StepIcon icon={peerList.length + 1} />
+                  </IconButton>
+                </Tooltip>
               </>
             )}
-            {isEmbedded ? null : (
-              <Divider
-                orientation="vertical"
-                sx={{ height: theme.spacing(3.5), mx: theme.spacing(1) }}
-              />
-            )}
-            <Tooltip
-              title={
-                showRoomControls ? 'Hide Room Controls' : 'Show Room Controls'
-              }
-            >
-              <IconButton
-                size="large"
-                color="inherit"
-                aria-label="show room controls"
-                onClick={onRoomControlsClick}
-              >
-                <RoomPreferences />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-            >
-              <IconButton
-                size="large"
-                edge="end"
-                color="inherit"
-                aria-label="fullscreen"
-                onClick={onClickFullscreen}
-              >
-                {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Click to show peer list">
-              <IconButton
-                size="large"
-                edge="end"
-                color="inherit"
-                aria-label="Peer list"
-                onClick={onPeerListClick}
-                sx={{
-                  ml: 1,
-                }}
-              >
-                <StepIcon icon={peerList.length + 1} />
-              </IconButton>
-            </Tooltip>
           </Toolbar>
         </AppBar>
       </Slide>
@@ -217,7 +254,14 @@ export const ShellAppBar = ({
           <Fab
             size="small"
             aria-label="show room controls"
-            color="primary"
+            sx={{
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+              boxShadow: theme.shadows[3],
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+              },
+            }}
             onClick={onRoomControlsClick}
           >
             <ExpandMore />

@@ -1,4 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 import localforage from 'localforage'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
@@ -108,6 +110,16 @@ const Bootstrap = ({
   const [userSettings, setUserSettings] =
     useState<UserSettings>(initialUserSettings)
   const { userId } = userSettings
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: userSettings.colorMode,
+        },
+      }),
+    [userSettings.colorMode]
+  )
 
   const persistUserSettings = useCallback(
     async (newUserSettings: UserSettings) => {
@@ -251,11 +263,7 @@ const Bootstrap = ({
               <Shell appNeedsUpdate={appNeedsUpdate} userPeerId={userId}>
                 <Routes>
                   {[routes.ROOT, routes.INDEX_HTML].map(path => (
-                    <Route
-                      key={path}
-                      path={path}
-                      element={<Home userId={userId} />}
-                    />
+                    <Route key={path} path={path} element={<Home />} />
                   ))}
                   <Route path={routes.ABOUT} element={<About />} />
                   <Route path={routes.DISCLAIMER} element={<Disclaimer />} />
@@ -278,7 +286,10 @@ const Bootstrap = ({
                 </Routes>
               </Shell>
             ) : (
-              <WholePageLoading />
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <WholePageLoading />
+              </ThemeProvider>
             )}
           </SettingsContext.Provider>
         </StorageContext.Provider>

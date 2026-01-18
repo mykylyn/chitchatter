@@ -1,12 +1,9 @@
 import Box, { BoxProps } from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
+import Typography from '@mui/material/Typography'
 
-interface WholePageLoadingProps extends BoxProps {}
+interface SplashScreenProps extends BoxProps {}
 
-export const WholePageLoading = ({
-  sx = [],
-  ...props
-}: WholePageLoadingProps) => {
+export const SplashScreen = ({ sx = [], ...props }: SplashScreenProps) => {
   return (
     <Box
       sx={[
@@ -15,12 +12,11 @@ export const WholePageLoading = ({
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          position: 'fixed',
+          position: 'absolute',
           top: 0,
           right: 0,
           bottom: 0,
           left: 0,
-          //backgroundColor: 'background.default',
           backgroundColor: theme =>
             theme.palette.mode === 'dark' ? '#111521' : 'rgba(0,0,0,0.05)',
         },
@@ -28,7 +24,16 @@ export const WholePageLoading = ({
       ]}
       {...props}
     >
-      <CircularProgress aria-label="Loading" />
+      <Typography
+        variant="h3"
+        sx={{
+          fontWeight: 'bold',
+          mb: 3,
+          color: 'text.primary',
+        }}
+      >
+        Blitz Meet
+      </Typography>
     </Box>
   )
 }

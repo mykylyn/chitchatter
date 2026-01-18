@@ -13,9 +13,13 @@ export const MediaButton = forwardRef<HTMLButtonElement, MediaButtonProps>(
         ref={ref}
         color={isActive ? 'primary' : 'secondary'}
         sx={{
-          width: 64,
-          height: 64,
-          minHeight: 64,
+          flex: 1, // Allow button to take equal space
+          height: 48, // Fixed height for pill shape
+          minHeight: 48,
+          maxHeight: 48, // Fixed height to maintain pill shape
+          borderRadius: 24, // Pill shape with half the height for fully rounded ends
+          mx: 0.5, // Add horizontal margin for spacing between buttons
+          minWidth: 60, // Ensure minimum usability size, but allow shrinking
           ...(isActive && {
             backgroundColor: '#0062f5',
             color: '#ffffff',

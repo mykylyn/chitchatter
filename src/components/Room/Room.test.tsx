@@ -102,12 +102,15 @@ describe('Room', () => {
     )
   })
 
-  test('send button is disabled', () => {
+  test('send button is disabled', async () => {
     render(
       <RouteStub>
         <RoomStub userId={mockUserId} roomId={mockRoomId} />
       </RouteStub>
     )
+
+    const chatTab = screen.getByText('Chat')
+    await userEvent.click(chatTab)
 
     const sendButton = screen.getByLabelText('Send')
     expect(sendButton).toBeDisabled()
@@ -119,6 +122,9 @@ describe('Room', () => {
         <RoomStub userId={mockUserId} roomId={mockRoomId} />
       </RouteStub>
     )
+
+    const chatTab = screen.getByText('Chat')
+    await userEvent.click(chatTab)
 
     const sendButton = screen.getByLabelText('Send')
     const textInput = screen.getByPlaceholderText('Your message')
@@ -134,6 +140,9 @@ describe('Room', () => {
         <RoomStub userId={mockUserId} roomId={mockRoomId} />
       </RouteStub>
     )
+
+    const chatTab = screen.getByText('Chat')
+    await userEvent.click(chatTab)
 
     const sendButton = screen.getByLabelText('Send')
     const textInput = screen.getByPlaceholderText('Your message')
@@ -154,6 +163,9 @@ describe('Room', () => {
         />
       </RouteStub>
     )
+
+    const chatTab = screen.getByText('Chat')
+    await userEvent.click(chatTab)
 
     const sendButton = screen.getByLabelText('Send')
     const textInput = screen.getByPlaceholderText('Your message')

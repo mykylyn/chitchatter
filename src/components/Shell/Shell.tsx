@@ -3,8 +3,8 @@ import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
 import MuiDrawer from '@mui/material/Drawer'
 import Link from '@mui/material/Link'
-import { ThemeProvider } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
+import { ThemeProvider } from '@mui/material/styles'
 import { useWindowSize } from '@react-hook/window-size'
 import {
   PropsWithChildren,
@@ -66,12 +66,11 @@ export const Shell = ({ appNeedsUpdate, children, userPeerId }: ShellProps) => {
 
   const theme = useShellTheme()
 
-  const [windowWidth] = useWindowSize()
-  const defaultSidebarsOpen = windowWidth >= theme.breakpoints.values.lg
+  const [_windowWidth] = useWindowSize()
 
   const peerRoomRef = useRef<PeerRoom>(null)
   const [isAlertShowing, setIsAlertShowing] = useState(false)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(defaultSidebarsOpen)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false) // Drawers disabled by default
   const [isQRCodeDialogOpen, setIsQRCodeDialogOpen] = useState(false)
   const [isRoomShareDialogOpen, setIsRoomShareDialogOpen] = useState(false)
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('info')
@@ -82,7 +81,7 @@ export const Shell = ({ appNeedsUpdate, children, userPeerId }: ShellProps) => {
   const [alertText, setAlertText] = useState('')
   const [roomId, setRoomId] = useState<string | undefined>(undefined)
   const [password, setPassword] = useState<string | undefined>(undefined)
-  const [isPeerListOpen, setIsPeerListOpen] = useState(defaultSidebarsOpen)
+  const [isPeerListOpen, setIsPeerListOpen] = useState(false) // Peer list drawer disabled by default
   const [peerList, setPeerList] = useState<Peer[]>([]) // except self
   const [
     isServerConnectionFailureDialogOpen,
